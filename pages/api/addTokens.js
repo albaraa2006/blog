@@ -6,7 +6,21 @@ const stripe = stripeInit(process.env.STRIPE_SECRET_KEY);
 
 export default async function handler(req, res) {
   const { user } = await getSession(req, res);
+  const client = await clientPromise;
+  const db = client.db("blog");
 
+  const userProfile = await db.collection("users").updateOne({
+    auth0Id: user.sub
+  }, {
+    $inc: {
+      availableTokens: 10
+    },
+    $setOnInsert: {
+      auth0Id: user.sub
+    }
+  },{
+    upsert: true
+  })
   const lineItems = [
     {
       price: process.env.STRIPE_PRODUCT_PRICE_ID,
@@ -36,3 +50,4 @@ export default async function handler(req, res) {
 
   res.status(200).json({ session: checkoutSession });
 }
+
