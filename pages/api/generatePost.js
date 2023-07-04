@@ -111,7 +111,7 @@ export default withApiAuthRequired(async function handler(req, res) {
   console.log('TITLE: ', title);
   console.log('META DESCRIPTION: ', metaDescription);
 
-  /*await db.collection('users').updateOne(
+  await db.collection('users').updateOne(
   {
     auth0Id: user.sub,
   },
@@ -120,7 +120,7 @@ export default withApiAuthRequired(async function handler(req, res) {
       availableTokens: -1,
     },
   }
-);*/
+);
 
   const post = await db.collection('posts').insertOne({
     postContent: postContent || '',
